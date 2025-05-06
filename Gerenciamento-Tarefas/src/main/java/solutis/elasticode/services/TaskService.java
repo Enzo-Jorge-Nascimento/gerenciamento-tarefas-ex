@@ -13,20 +13,22 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository repository;
+    private final TaskMapping mapping;
 
-    public TaskService(TaskRepository repository) {
+    public TaskService(TaskRepository repository, TaskMapping mapping) {
         this.repository = repository;
+        this.mapping = mapping;
     }
 
     public Task criarTask(TaskDto dto) {
-        return repository.save(TaskMapping.toEntity(dto));
+        return repository.save(mapping.toEntity(dto));
     }
 
     public List<Task> listarTasks() {
         return repository.findAll();
     }
 
-    public Task buscarTask(Long id) {
+    public Task buscarTask(Integer id) {
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(
                         "A task de id %d não foi encontrada.".formatted(id)
@@ -34,15 +36,15 @@ public class TaskService {
         );
     }
 
-    public Task atualizarTask(TaskDto dto, Long id) {
-        Task taskAtt = TaskMapping.toEntity(dto);
+    public Task atualizarTask(TaskDto dto, Integer id) {
+        Task taskAtt = mapping.toEntity(dto);
 
         taskAtt.setId(id);
 
         return repository.save(taskAtt);
     }
 
-    public void deletarTask(Long id) {
+    public void deletarTask(Integer id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException(
                 "A task de id %d não foi encontrada.".formatted(id)
         );

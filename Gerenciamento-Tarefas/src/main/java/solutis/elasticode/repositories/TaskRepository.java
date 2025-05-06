@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import solutis.elasticode.entities.Task;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, Integer> {
 
 }

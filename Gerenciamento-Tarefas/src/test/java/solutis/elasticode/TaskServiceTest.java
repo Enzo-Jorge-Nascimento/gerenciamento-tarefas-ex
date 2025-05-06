@@ -44,7 +44,7 @@ class TaskServiceTest {
 
     @Test
     void createTask_validTask_returnsSavedTask() {
-        when(mapping.toEntity(dto)).thenReturn(entity);
+        when((mapping.toEntity(dto))).thenReturn(entity);
         when(repository.save(any(Task.class))).thenReturn(entity);
         when(mapping.toDto(entity)).thenReturn(dto);
 
@@ -60,26 +60,24 @@ class TaskServiceTest {
     @Test
     void getAllTasks_returnsTaskList() {
         when(repository.findAll()).thenReturn(Arrays.asList(entity));
-        when(mapping.toDto(entity)).thenReturn(dto);
 
         var tasks = service.listarTasks();
 
         assertEquals(1, tasks.size());
         assertEquals("Task Teste", tasks.get(0).getTitulo());
         verify(repository, times(1)).findAll();
-        verify(mapping, times(1)).toDto(entity);
     }
 
     @Test
     void getTaskById_validId_returnsTask() {
-        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+        when(repository.findById(1)).thenReturn(Optional.of(entity));
         when(mapping.toDto(entity)).thenReturn(dto);
 
-        TaskDto foundEntity = mapping.toDto(service.buscarTask(1L));
+        TaskDto foundEntity = mapping.toDto(service.buscarTask(1));
 
         assertNotNull(foundEntity);
         assertEquals("Task Teste", foundEntity.getTitulo());
-        verify(repository, times(1)).findById(1L);
+        verify(repository, times(1)).findById(1);
         verify(mapping, times(1)).toDto(entity);
     }
 

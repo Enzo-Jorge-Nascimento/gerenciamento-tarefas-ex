@@ -15,35 +15,37 @@ import java.util.stream.Collectors;
 public class TaskController {
 
     private final TaskService service;
+    private final TaskMapping mapping;
 
-    public TaskController(TaskService service) {
+    public TaskController(TaskService service, TaskMapping mapping) {
         this.service = service;
+        this.mapping = mapping;
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> criartask(@RequestBody TaskDto requestDto) {
-        return ResponseEntity.status(201).body(TaskMapping.toDto(service.criarTask(requestDto)));
+    public ResponseEntity<TaskDto> criartask(@RequestBody TaskDto dto) {
+        return ResponseEntity.status(201).body(mapping.toDto(service.criarTask(dto)));
     }
 
     @GetMapping
     public ResponseEntity<List<TaskDto>> listarTasks() {
         List<Task> tasks = service.listarTasks();
 
-        return ResponseEntity.status(200).body(tasks.stream().map(TaskMapping::toDto).collect(Collectors.toList()));
+        return ResponseEntity.status(200).body(tasks.stream().map(mapping::toDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> buscarTask(@PathVariable Long id) {
-        return ResponseEntity.status(200).body(TaskMapping.toDto(service.buscarTask(id)));
+    public ResponseEntity<TaskDto> buscarTask(@PathVariable Integer id) {
+        return ResponseEntity.status(200).body(mapping.toDto(service.buscarTask(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDto> atualizarTask(@RequestBody TaskDto requestDto, @PathVariable Long id) {
-        return ResponseEntity.status(200).body(TaskMapping.toDto(service.atualizarTask(requestDto, id)));
+    public ResponseEntity<TaskDto> atualizarTask(@RequestBody TaskDto dto, @PathVariable Integer id) {
+        return ResponseEntity.status(200).body(mapping.toDto(service.atualizarTask(dto, id)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarTask(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarTask(@PathVariable Integer id) {
         service.deletarTask(id);
 
         return ResponseEntity.status(204).build();
